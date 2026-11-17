@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		C0D3A0012F10000100C0D3A0 /* HSShortcutPanelController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0D3A0022F10000100C0D3A0 /* HSShortcutPanelController.swift */; };
 		220B882A27F8F954006C0B2B /* test_image.lua in Resources */ = {isa = PBXBuildFile; fileRef = 220B882927F8F954006C0B2B /* test_image.lua */; };
 		220B882C27F8F9A3006C0B2B /* HSimage.m in Sources */ = {isa = PBXBuildFile; fileRef = 220B882B27F8F9A3006C0B2B /* HSimage.m */; };
 		220E0B1A29B07EFA003B0BBD /* HSStreamDeckDevicePedal.h in Headers */ = {isa = PBXBuildFile; fileRef = 220E0B1829B07EFA003B0BBD /* HSStreamDeckDevicePedal.h */; };
@@ -1580,6 +1581,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		C0D3A0022F10000100C0D3A0 /* HSShortcutPanelController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HSShortcutPanelController.swift; sourceTree = "<group>"; };
+		C0D3A0032F10000100C0D3A0 /* Hammerspoon-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Hammerspoon-Bridging-Header.h"; sourceTree = "<group>"; };
 		220B882927F8F954006C0B2B /* test_image.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = test_image.lua; path = extensions/image/test_image.lua; sourceTree = "<group>"; };
 		220B882B27F8F9A3006C0B2B /* HSimage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HSimage.m; sourceTree = "<group>"; };
 		220E0B1829B07EFA003B0BBD /* HSStreamDeckDevicePedal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HSStreamDeckDevicePedal.h; path = extensions/streamdeck/HSStreamDeckDevicePedal.h; sourceTree = "<group>"; };
@@ -4144,6 +4147,8 @@
 		944A2D49198973A400D8DC90 /* Main */ = {
 			isa = PBXGroup;
 			children = (
+				C0D3A0022F10000100C0D3A0 /* HSShortcutPanelController.swift */,
+				C0D3A0032F10000100C0D3A0 /* Hammerspoon-Bridging-Header.h */,
 				94787D1419A38A8B00540401 /* variables.h */,
 				D077B5BE1A001B5300369B30 /* variables.m */,
 				944A2D351989735300D8DC90 /* MainMenu.xib */,
@@ -7773,6 +7778,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C0D3A0012F10000100C0D3A0 /* HSShortcutPanelController.swift in Sources */,
 				944A2D391989735300D8DC90 /* MJAppDelegate.m in Sources */,
 				942BF3911989E18600983892 /* MJAutoLaunch.m in Sources */,
 				9409203119A5940600B9964E /* MJVersionUtils.m in Sources */,

@@ -14,6 +14,8 @@ INFOPLIST_FILE = Hammerspoon/Hammerspoon-Info.plist
 PRODUCT_NAME = Hammerspoon
 PRODUCT_BUNDLE_IDENTIFIER = org.hammerspoon.${PRODUCT_NAME:rfc1034identifier}
 WRAPPER_EXTENSION = app
+SWIFT_VERSION = 5.0
+SWIFT_OBJC_BRIDGING_HEADER = Hammerspoon/Hammerspoon-Bridging-Header.h
 
 // Version information. This is expected to be overridden later based on git tag/commit
 CURRENT_PROJECT_VERSION = 1
