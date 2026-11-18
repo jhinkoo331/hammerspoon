@@ -78,6 +78,8 @@ private final class HSShortcutStore: ObservableObject {
     private var refreshTimer: Timer?
     private var isActive = false
 
+    private static let menuShortcutAnnotation = "-- @menu-shortcut"
+
     private let query = """
     local result = {}
     for _, hotkey in ipairs(hs.hotkey.getHotkeys()) do
@@ -107,10 +109,16 @@ private final class HSShortcutStore: ObservableObject {
                 throw HSShortcutPanelError.invalidOutput
             }
             let hotkeys = try JSONDecoder().decode([HSLuaHotkey].self, from: data)
-            shortcuts = hotkeys.map { hotkey in
+            let activeShortcuts = hotkeys.map { hotkey in
                 let title = Self.cleanedTitle(message: hotkey.msg, keys: hotkey.idx)
                 return HSShortcut(id: "\(hotkey.idx)|\(title)", keys: hotkey.idx, title: title)
-            }.sorted(by: Self.shortcutOrder)
+            }
+            let declaredShortcuts = Self.loadDeclaredShortcuts()
+            var uniqueShortcuts: [String: HSShortcut] = [:]
+            for shortcut in activeShortcuts + declaredShortcuts {
+                uniqueShortcuts[shortcut.id] = shortcut
+            }
+            shortcuts = uniqueShortcuts.values.sorted(by: Self.shortcutOrder)
             errorMessage = nil
         } catch {
             errorMessage = error.localizedDescription
@@ -132,6 +140,47 @@ private final class HSShortcutStore: ObservableObject {
             )
         }
         return title.isEmpty ? "未命名快捷键" : title
+    }
+
+    private static func loadDeclaredShortcuts() -> [HSShortcut] {
+        let configDirectory = URL(fileURLWithPath: MJConfigDirAbsolute(), isDirectory: true)
+        guard let enumerator = FileManager.default.enumerator(
+            at: configDirectory,
+            includingPropertiesForKeys: nil,
+            options: [.skipsHiddenFiles]
+        ) else {
+            return []
+        }
+
+        var shortcuts: [HSShortcut] = []
+        for case let fileURL as URL in enumerator where fileURL.pathExtension.lowercased() == "lua" {
+            guard let contents = try? String(contentsOf: fileURL, encoding: .utf8) else { continue }
+            for line in contents.components(separatedBy: .newlines) {
+                guard let shortcut = declaredShortcut(from: line) else { continue }
+                shortcuts.append(shortcut)
+            }
+        }
+        return shortcuts
+    }
+
+    private static func declaredShortcut(from line: String) -> HSShortcut? {
+        let trimmedLine = line.trimmingCharacters(in: .whitespaces)
+        guard trimmedLine.hasPrefix(menuShortcutAnnotation) else { return nil }
+
+        var declaration = String(trimmedLine.dropFirst(menuShortcutAnnotation.count))
+            .trimmingCharacters(in: .whitespaces)
+        if declaration.hasPrefix(":") {
+            declaration.removeFirst()
+            declaration = declaration.trimmingCharacters(in: .whitespaces)
+        }
+
+        guard let separator = declaration.firstIndex(of: "|") else { return nil }
+        let keys = declaration[..<separator].trimmingCharacters(in: .whitespaces)
+        let title = declaration[declaration.index(after: separator)...]
+            .trimmingCharacters(in: .whitespaces)
+        guard !keys.isEmpty, !title.isEmpty else { return nil }
+
+        return HSShortcut(id: "\(keys)|\(title)", keys: keys, title: title)
     }
 
     private static func shortcutOrder(_ lhs: HSShortcut, _ rhs: HSShortcut) -> Bool {
@@ -237,7 +286,7 @@ private struct HSShortcutPanelView: View {
             emptyState(
                 title: "没有快捷键",
                 systemImage: "keyboard",
-                detail: "请在 hs.hotkey.bind 中加入 message 参数。"
+                detail: "请在 hs.hotkey.bind 中加入 message 参数，或使用 @menu-shortcut 注释。"
             ) { EmptyView() }
         } else {
             ScrollView {
